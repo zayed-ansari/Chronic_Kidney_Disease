@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chronic Kidney Disease Prediction</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+            min-height: 100vh;
+            background-color: #000; 
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: rgba(0, 0, 0, 0.8); 
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5), 0 0 10px #a100ff; 
+        }
+        h1 {
+            color: #ffffff;
+            text-align: center;
+        }
+        h2 {
+            color: #cccccc;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        input, select {
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            font-size: 16px;
+            background-color: #222;
+            color: #fff;
+            transition: box-shadow 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 8px #a100ff; 
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+            box-shadow: 0 0 10px #a100ff; 
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #28a745;
+            border: 1px solid #218838;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 0 8px #28a745; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chronic Kidney Disease Prediction</h1>
+        
+        <form action="/predict" method="post" autocomplete="off">
+            <input type="number" step="any" name="blood_urea" 
+                   placeholder="Enter your blood urea" 
+                   value="{% if form_data %}{{ form_data.blood_urea }}{% endif %}"
+                   autocomplete="off" required>
+            
+            <input type="number" step="any" name="blood_glucose_random" 
+                   placeholder="Enter your blood glucose random" 
+                   value="{% if form_data %}{{ form_data.blood_glucose_random }}{% endif %}"
+                   autocomplete="off" required>
+            
+            <select name="aanemia" required>
+                <option value="">Select anemia status</option>
+                <option value="1" {% if form_data and form_data.aanemia == 1 %}selected{% endif %}>Yes</option>
+                <option value="0" {% if form_data and form_data.aanemia == 0 %}selected{% endif %}>No</option>
+            </select>
+            
+            <select name="coronary_artery_disease" required>
+                <option value="">Select coronary artery disease status</option>
+                <option value="1" {% if form_data and form_data.coronary_artery_disease == 1 %}selected{% endif %}>Yes</option>
+                <option value="0" {% if form_data and form_data.coronary_artery_disease == 0 %}selected{% endif %}>No</option>
+            </select>
+            
+            <select name="pus_cell" required>
+                <option value="">Select pus cell level</option>
+                <option value="1" {% if form_data and form_data.pus_cell == 1 %}selected{% endif %}>Normal</option>
+                <option value="0" {% if form_data and form_data.pus_cell == 0 %}selected{% endif %}>Abnormal</option>
+            </select>
+            
+            <input type="number" step="any" name="red_blood_cell_count" 
+                   placeholder="Enter your red blood cell count" 
+                   value="{% if form_data %}{{ form_data.red_blood_cell_count }}{% endif %}"
+                   autocomplete="off" required>
+            
+            <select name="diabetes_mellitus" required>
+                <option value="">Select diabetes mellitus status</option>
+                <option value="1" {% if form_data and form_data.diabetes_mellitus == 1 %}selected{% endif %}>Yes</option>
+                <option value="0" {% if form_data and form_data.diabetes_mellitus == 0 %}selected{% endif %}>No</option>
+            </select>
+            
+            <select name="pedal_edema" required>
+                <option value="">Select pedal edema status</option>
+                <option value="1" {% if form_data and form_data.pedal_edema == 1 %}selected{% endif %}>Yes</option>
+                <option value="0" {% if form_data and form_data.pedal_edema == 0 %}selected{% endif %}>No</option>
+            </select>
+            
+            <button type="submit">Predict</button>
+            <button type="button" onclick="clearForm()">Clear Form</button>
+        </form>
+        
+        {% if prediction_text %}
+        <div class="result">{{ prediction_text }}</div>
+        {% endif %}
+    </div>
+    
+    <script>
+        function clearForm() {
+            document.querySelectorAll('input').forEach(input => input.value = '');
+            document.querySelectorAll('select').forEach(select => select.selectedIndex = 0);
+            const resultDiv = document.querySelector('.result');
+            if (resultDiv) {
+                resultDiv.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
